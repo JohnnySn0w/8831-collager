@@ -1,0 +1,2 @@
+\venv\lib\site-packages\PIL\Image.py:3186: DecompressionBombWarning: Image size (1565302834 pixels) exceeds limit of 1000000000 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
