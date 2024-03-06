@@ -22,7 +22,5 @@ if identically close to 2 different banners.
 ### Example
 ![](./acraker2001_back_button.jpg)
 
-
-
-https://github.com/JohnnySn0w/8831-collager/assets/33181572/c498a3bb-e21b-4e5d-b537-3cdc9fe1a816
+https://www.youtube.com/watch?v=8XRhzpTc_GA
 
