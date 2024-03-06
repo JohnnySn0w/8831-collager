@@ -4,11 +4,12 @@ from PIL import Image, ImageSequence, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 Image.MAX_IMAGE_PIXELS = 1000000000  
 
-from pprint import pprint
 import numpy as np
 import os
 import csv
 import multiprocessing
+
+from config import *
 
 def calculate_frame_rgb(frame):
     # Ensure image is in RGBA for transparency handling
@@ -51,10 +52,10 @@ def process_image(image_path, flashy_threshold)-> Tuple[bool, np.ndarray]:
 
             is_flashy = np.any(std_devs > flashy_threshold)
             # if is_flashy:
-            #     print(f'found flashy {image_path}')
+            #     logging.info(f'found flashy {image_path}')
             return is_flashy, image_means
     except (OSError, ValueError, IndexError, Image.DecompressionBombError, struct.error) as e:
-        print(f"Error processing image {image_path}: {e}")
+        logging.info(f"Error processing image {image_path}: {e}")
         return False, [0, 0, 0]  # or another appropriate default value
 
 def process_image_wrapper(args):
@@ -90,7 +91,7 @@ def process_folder(folder_path, output_csv):
                 continue
             writer.writerow([filename, flashy] + list(mean_rgb.tolist()))
     
-    print(f"Processed folder '{folder_path}' and saved output to '{output_csv}'.")
+    logging.info(f"Processed folder '{folder_path}' and saved output to '{output_csv}'.")
 
 # Specify your folder path and output CSV file name
 folder_path = './buttons'
