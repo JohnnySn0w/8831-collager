@@ -59,7 +59,7 @@ def find_closest_image(args):
     return x, y, image_data.iloc[index[0]]["Image Name"].values[0]
 
 
-def main(image_path):
+def load_and_parse(image_path):
     # Load the image
     img = Image.open(image_path)
     img = downscale_image(img)
@@ -91,4 +91,4 @@ def main(image_path):
 
 if __name__ == "__main__":
     image_path = sys.argv[1]
-    main(image_path)
+    load_and_parse(image_path)

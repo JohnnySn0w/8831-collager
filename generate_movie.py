@@ -51,14 +51,18 @@ def create_frame(frame_number):
     return np.array(canvas)
 
 
-# Determine number of frames for the video (based on the animated images)
-num_frames = 30  # Adjust based on your needs
+def main():
+    # Determine number of frames for the video (based on the animated images)
+    num_frames = 30  # Adjust based on your needs
 
-# Create the frames for the video
-frames = [create_frame(f) for f in range(num_frames)]
+    # Create the frames for the video
+    frames = [create_frame(f) for f in range(num_frames)]
 
-# Create the video
-clip = ImageSequenceClip(frames, fps=10)  # Adjust FPS as needed
-clip.write_videofile(
-    "output_video.mp4", codec="libx264", audio_codec="aac"
-)  # https://stackoverflow.com/a/70826414
+    # Create the video
+    clip = ImageSequenceClip(frames, fps=10)  # Adjust FPS as needed
+    clip.write_videofile(
+        "output_video.mp4", codec="libx264", audio_codec="aac"
+    )  # https://stackoverflow.com/a/70826414
+
+if __name__ == "__main__":
+    main()
