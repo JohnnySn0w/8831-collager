@@ -5,3 +5,5 @@ image_values.csv
 pixel_results.csv
 geocities_88x31_buttons_nodupes.zip
 __pycache__
+*.png
+*.jpg
