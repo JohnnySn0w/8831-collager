@@ -5,26 +5,29 @@ import time
 
 # local files
 from config import *
+
 start = time.perf_counter()
 # Load your CSV data
-csv_path = 'image_values.csv'  # Update this path to your CSV file
+csv_path = "image_values.csv"  # Update this path to your CSV file
 image_data = pd.read_csv(csv_path)
 
 # Assuming your CSV has columns 'Image Name', 'Flashy', 'Mean Red', 'Mean Green', 'Mean Blue'
 # Filter out flashy images if necessary
-image_data = image_data[image_data['Flashy'] == False]
+image_data = image_data[image_data["Flashy"] == False]
 
 # Extract RGB values
-rgb_values = image_data[['Mean Red', 'Mean Green', 'Mean Blue']].values
+rgb_values = image_data[["Mean Red", "Mean Green", "Mean Blue"]].values
 
 # Build a k-d tree
-nn = NearestNeighbors(n_neighbors=1, algorithm='kd_tree')
+nn = NearestNeighbors(n_neighbors=1, algorithm="kd_tree")
 nn.fit(rgb_values)
+
 
 # Define the function to find the closest image
 def find_closest_image(pixel_rgb):
     distance, index = nn.kneighbors([pixel_rgb])
-    return image_data.iloc[index[0]]['Image Name'].values[0]
+    return image_data.iloc[index[0]]["Image Name"].values[0]
+
 
 # Example usage
 pixel_rgb = (200, 180, 0)  # Example pixel RGB value
