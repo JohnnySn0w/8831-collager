@@ -1,5 +1,5 @@
 from PIL import Image, ImageSequence, ImageFile
-
+from multiprocessing import Pool, shared_memory
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import pandas as pd
 import numpy as np
@@ -8,28 +8,15 @@ import sys
 import math
 from config import *
 
-# Load CSV
-df = pd.read_csv(sys.argv[1])
-orig_img = Image.open(sys.argv[2])
-
-# Dimensions of the replacement images
-img_width, img_height = 88, 31
-
-# Original image dimensions (to be replaced with actual dimensions)
-original_width = orig_img.width  # Example, replace with the actual width
-original_height = orig_img.height  # Example, replace with the actual height
-
-# Calculate canvas size based on the original image dimensions
-canvas_size = (original_width * img_width, original_height * img_height)
-
+'''Functions'''
 def create_frame(frame_number):
     # Create a blank canvas
     canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
-    blank = Image.new("RGBA", (img_width, img_height), (0, 0, 0, 0))  # for blank frames
+    blank = Image.new("RGBA", (banner_width, banner_height), (0, 0, 0, 0))  # for blank frames
     for _, row in df.iterrows():
         image_path = row["func_result"]
         # Adjust x, y to scale up to the new grid
-        x, y = int(row["x"]) * img_width, int(row["y"]) * img_height
+        x, y = int(row["x"]) * banner_width, int(row["y"]) * banner_height
 
         with Image.open(f"./buttons/{image_path}") as img:
             # Handle animated images
@@ -51,7 +38,7 @@ def create_frame(frame_number):
     return np.array(canvas)
 
 
-def main():
+def gen_movie():
     # Determine number of frames for the video (based on the animated images)
     num_frames = 30  # Adjust based on your needs
 
@@ -65,4 +52,7 @@ def main():
     )  # https://stackoverflow.com/a/70826414
 
 if __name__ == "__main__":
-    main()
+    dtype = np.uint8
+    shared_mem_obj = shared_memory.SharedMemory(name="memchunk", create=True, size=np.prod(orig_img.size)*dtype().itemsize)
+    shared_array = np.ndarray(orig_img.size, dtype=dtype, buffer=shared_mem_obj.buf)
+    gen_movie()
