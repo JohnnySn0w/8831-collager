@@ -7,7 +7,7 @@ https://hellnet.work/8831
 ### Step 1
 If the filehosting of the data zips goes down, the scraper.py script can be used, it's a lot slower though.
 
-Otherwise, unzip the zip file into a folder in this repo called `buttons`, and run the convert script on whatever you want to start converting to an art piece.
+Otherwise, grab the deduped zip file linked on the hellnet.work site. put it in the root of this repo.
 
 ### Step 2
 
