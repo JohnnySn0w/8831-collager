@@ -1,12 +1,17 @@
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageSequence, ImageFile
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 from moviepy.editor import ImageSequenceClip
 import time
+import tqdm
+
 from multiprocessing import Pool, shared_memory
 
+
 from config import *
+
 
 """Functions"""
 
@@ -20,7 +25,7 @@ def create_frame(
     banner_width,
     banner_height,
 ):
-    logging.info(f"processing frame {frame_number} in {frame_mem_name}")
+    logging.debug(f"processing frame {frame_number} in {frame_mem_name}")
     # Height and width are swapped in PIL, adjust for that when using canvas_size dimensions
     shape = (canvas_size[1], canvas_size[0], 4)
     frame_mem = shared_memory.SharedMemory(name=frame_mem_name, create=False)
@@ -60,6 +65,7 @@ def create_frame(
             pass
     # frame_array = np.array(canvas)
     frame_mem.close()
+    return 0
 
 
 def gen_movie():
@@ -118,7 +124,9 @@ def gen_movie():
     logging.info("processing video")
     clip = ImageSequenceClip(processed_frames, fps=10)  # Adjust FPS as needed
     clip.write_videofile(
-        "output_video.mp4", codec="libx264", audio_codec="aac"
+        "output_video.mp4",
+        codec="libx264",
+        audio_codec="aac",
     )  # https://stackoverflow.com/a/70826414
 
     # cleanup

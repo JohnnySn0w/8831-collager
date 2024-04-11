@@ -12,6 +12,9 @@ import multiprocessing
 
 from config import *
 
+dir_name = "./buttons"
+file_name = "image_values.csv"
+
 
 def calculate_frame_rgb(frame):
     # Ensure image is in RGBA for transparency handling
@@ -76,7 +79,7 @@ def process_image_wrapper(args):
     return process_image(image_path, flashy_threshold)
 
 
-def process_folder(folder_path, output_csv):
+def process_folder(folder_path=dir_name, output_csv=file_name):
     """Process each image in a folder and write mean RGB values to a CSV file."""
     # Define CSV headers
     headers = ["Image Name", "Flashy", "Mean Red", "Mean Green", "Mean Blue"]
@@ -108,10 +111,5 @@ def process_folder(folder_path, output_csv):
     )
 
 
-# Specify your folder path and output CSV file name
-folder_path = "./buttons"
-output_csv = "image_values.csv"
-
-
 if __name__ == "__main__":
-    process_folder(folder_path, output_csv)
+    process_folder()

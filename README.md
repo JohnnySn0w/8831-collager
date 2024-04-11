@@ -3,11 +3,52 @@
 
 https://hellnet.work/8831
 
+## To run
+### Step 1
 If the filehosting of the data zips goes down, the scraper.py script can be used, it's a lot slower though.
 
-Otherwise, unzip the zip file, and run the convert script on whatever you want.
+Otherwise, unzip the zip file into a folder in this repo called `buttons`, and run the convert script on whatever you want to start converting to an art piece.
 
-Steps:
+### Step 2
+
+```bash
+python -m venv venv
+```
+on osx/linux:
+
+```bash
+source ./venv/bin/activate
+```
+
+on windows:
+
+```powershell
+./venv/Scripts/activate
+```
+
+and 
+
+```
+pip install -r requirements.txt
+```
+
+### Step 3
+
+Pass the image you want to convert into a call to `image_converter.py`.
+
+```bash
+python image_converter.py imagefile.png
+```
+
+### Step 4
+wait
+
+### Step 5
+
+done!
+
+
+## Process
 
 1. load in all immages
 2. Go through each image, and calculate mean color of image.

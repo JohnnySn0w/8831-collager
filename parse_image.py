@@ -5,24 +5,7 @@ import multiprocessing as mp
 import numpy as np
 import sys
 import math
-
-from pprint import pprint
-
-
-# Load your CSV data
-csv_path = "image_values.csv"  # Update this path to your CSV file
-image_data = pd.read_csv(csv_path)
-
-# Assuming your CSV has columns 'Image Name', 'Flashy', 'Mean Red', 'Mean Green', 'Mean Blue'
-# Filter out flashy images if necessary
-image_data = image_data[image_data["Flashy"] == False]
-
-# Extract RGB values
-rgb_values = image_data[["Mean Red", "Mean Green", "Mean Blue"]].values
-
-# Build a k-d tree
-nn = NearestNeighbors(n_neighbors=1, algorithm="kd_tree")
-nn.fit(rgb_values)
+import logging
 
 
 def downscale_image(img, method=Image.LANCZOS):
@@ -31,8 +14,6 @@ def downscale_image(img, method=Image.LANCZOS):
     target_width = encoder_max["width"] / 88
 
     original_width, original_height = img.size
-    pprint(img.size)
-    pprint((target_width, target_height))
     if original_width > original_height:  # Which dimension is larger?
         if original_width > target_width:
             ratio = math.ceil(original_width / target_width)
@@ -54,7 +35,7 @@ def downscale_image(img, method=Image.LANCZOS):
 
 # Define the function to find the closest image
 def find_closest_image(args):
-    x, y, pixel_rgb = args
+    x, y, pixel_rgb, nn, image_data = args
     distance, index = nn.kneighbors([pixel_rgb])
     return x, y, image_data.iloc[index[0]]["Image Name"].values[0]
 
@@ -67,9 +48,26 @@ def load_and_parse(image_path):
         img = img.convert("RGB")
     pixels = img.load()
 
+    # Load your CSV data
+    csv_path = "image_values.csv"
+    image_data = pd.read_csv(csv_path)
+
+    # Assuming your CSV has columns 'Image Name', 'Flashy', 'Mean Red', 'Mean Green', 'Mean Blue'
+    # Filter out flashy images if necessary
+    image_data = image_data[image_data["Flashy"] == False]
+
+    # Extract RGB values
+    rgb_values = image_data[["Mean Red", "Mean Green", "Mean Blue"]].values
+
+    # Build a k-d tree
+    nn = NearestNeighbors(n_neighbors=1, algorithm="kd_tree")
+    nn.fit(rgb_values)
+
     # Prepare arguments for multiprocessing: list of (x, y, pixel_value)
     args_list = [
-        (x, y, pixels[x, y]) for x in range(img.width) for y in range(img.height)
+        (x, y, pixels[x, y], nn, image_data)
+        for x in range(img.width)
+        for y in range(img.height)
     ]
 
     # Setup multiprocessing pool
